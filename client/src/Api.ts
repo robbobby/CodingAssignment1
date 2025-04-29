@@ -1,4 +1,5 @@
 import axios from "axios";
+import {ExportJob} from "./Models/ExportJob";
 
 axios.defaults.baseURL = 'http://localhost:5170'
 
@@ -9,13 +10,6 @@ const urls = {
     },
 }
 
-type ExportJob = {
-    id: string;
-    name: string;
-    status: string;
-    createdAt: string;
-};
-
 export const api = {
     exportJobs: {
         get: async (): Promise<ExportJob[]> => {
@@ -23,7 +17,7 @@ export const api = {
             return response.data;
         },
         start: async (jobId: string) => {
-            const response = await axios.post(urls.exportJobs.Start, { jobId });
+            const response = await axios.post(urls.exportJobs.Start, {jobId});
             return response.data;
         },
     },
