@@ -11,7 +11,20 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IExportJobService, ExportJobService>();
 builder.Services.AddScoped<IExportJobDb, ExportJobDb>();
 
+builder.Services.AddCors(o =>
+{
+    o.AddPolicy("AllowClient",
+        builder =>
+        {
+            builder.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
 var app = builder.Build();
+
+app.UseCors("AllowClient");
 
 if (app.Environment.IsDevelopment())
 {
