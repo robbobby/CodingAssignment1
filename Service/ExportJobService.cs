@@ -10,7 +10,8 @@ public interface IExportJobService
     Job[] GetAllExportJobs(int domainId);
 }
 
-public class ExportJobService(IExportJobDb _exportJobDb) : IExportJobService
+public class ExportJobService(IExportJobDb _exportJobDb, ExportJobPollingService _exportJobPollingService)
+    : IExportJobService
 {
     public void StartExportJob()
     {
@@ -24,23 +25,23 @@ public class ExportJobService(IExportJobDb _exportJobDb) : IExportJobService
 
     public Job[] GetAllExportJobs(int domainId)
     {
-        var jobs = _exportJobDb.GetAllExportJobs(domainId)
-            .Select(j => new Job
-            {
-                Id = j.Id,
-                Name = j.Name,
-                Status = j.Status,
-                CreatedAt = j.CreatedAt
-            }).ToArray();
+        var jobEntity = _exportJobDb.GetAllExportJobs(domainId).ToArray();
 
-        foreach(Job job in jobs)
+        foreach(var job in jobEntity)
         {
             if(job.Status == "Processing")
             {
-                // TODO: start the polling process
+                Console.WriteLine($"Job {job.Id} is already processing.");
+                _exportJobPollingService.AddJob(job.OperationId, domainId);
             }
         }
 
-        return jobs;
+        return jobEntity.Select(j => new Job
+        {
+            Id = j.Id,
+            Name = j.Name,
+            Status = j.Status,
+            CreatedAt = j.CreatedAt
+        }).ToArray();
     }
 }

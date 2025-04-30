@@ -1,6 +1,6 @@
 export type ExportJobStatus = "Error" | "Processing" | "Completed";
 export type ExportJob = {
-    id: string;
+    id: number;
     name: string;
     status: ExportJobStatus;
     createdAt: string;

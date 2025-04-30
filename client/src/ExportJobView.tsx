@@ -3,7 +3,7 @@ import {Container, Typography, Button, Grid, Box} from '@mui/material';
 import {ExportJobCard} from './Components/ExportJobCard';
 
 function ExportJobView() {
-    const {jobs, loading, error, refreshJobs, startJob} = useExportJobContext();
+    const {jobs, loading, error, startJob} = useExportJobContext();
 
     if (loading)
         return <Typography variant="h6">Loading...</Typography>;
@@ -16,9 +16,6 @@ function ExportJobView() {
                 Job List
             </Typography>
             <Box sx={{flexGrow: 1, gap: 2, display: 'flex'}}>
-                <Button variant="contained" color="primary" onClick={refreshJobs} style={{marginBottom: '1rem'}}>
-                    Refresh Jobs
-                </Button>
                 <Button variant="contained" color="secondary"
                         onClick={() => startJob('example-data-set')} // TODO: Drop down or something for data set
                         style={{marginBottom: '1rem'}}>

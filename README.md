@@ -9,6 +9,7 @@
 - The spec states that the backend should perform polling to the third-party API.
   However, I initially thought that if the client authenticated directly and obtained a JWT (e.g., through a sign-in flow), it could securely poll the third-party API itself.
   In this assignment, I have followed the spec and implemented polling via the backend.
+- The 3rd party API is assumed to only take one id at a time.
 
 ## Backend
 

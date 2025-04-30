@@ -1,4 +1,7 @@
+using Api.Hubs;
+using Api.Hubs.ExportJob;
 using Db;
+using Microsoft.AspNetCore.SignalR;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,21 +13,31 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IExportJobService, ExportJobService>();
 builder.Services.AddScoped<IExportJobDb, ExportJobDb>();
+builder.Services.AddSingleton<ExportJobPollingService>();
+builder.Services.AddHostedService(provider => provider.GetRequiredService<ExportJobPollingService>());
+builder.Services.AddSignalR();
 
-builder.Services.AddCors(o =>
+
+builder.Services.AddCors(options =>
 {
-    o.AddPolicy("AllowClient",
-        builder =>
-        {
-            builder.WithOrigins("http://localhost:3000")
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
+    options.AddDefaultPolicy(policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
 });
+
 
 var app = builder.Build();
 
-app.UseCors("AllowClient");
+app.UseCors();
+
+app.MapHub<ExportJobHub>("/ws/exportJobHub");
+
+PollingServiceSetup.ExportJobBootstrap(app);
 
 if (app.Environment.IsDevelopment())
 {
