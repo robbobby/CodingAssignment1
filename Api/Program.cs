@@ -1,7 +1,5 @@
-using Api.Hubs;
 using Api.Hubs.ExportJob;
 using Db;
-using Microsoft.AspNetCore.SignalR;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
