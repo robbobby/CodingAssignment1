@@ -16,14 +16,13 @@ public static class PollingServiceSetup
             {
                 var matchingConnections = ExportJobHub.GetConnectionsForDomain(domainId);
 
-                Console.WriteLine($"Notifying domain {domainId} about job {jobId} status change to {status}");
                 foreach(var connectionId in matchingConnections)
                 {
                     await hubContext.Clients.Client(connectionId).SendAsync("JobUpdate", jobId, status);
                 }
             } catch(Exception e)
             {
-                Console.WriteLine($"Error notifying job status change: {e.Message}");
+                await Console.Error.WriteLineAsync($"Error notifying job status change: {e.Message}");
             }
         };
     }

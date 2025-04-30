@@ -17,7 +17,7 @@
 - `SignalR` - for frontend status tracking instead of polling. This is the better choice im my opinion. But not always the right choice.
  
 ### APIs
-- /api/jobs
+- /api/export-jobs
 - Following RESTful principles
 - `GET` - Get all jobs
 - `POST /start` - Create a new job
@@ -25,7 +25,7 @@
 ### Notes
 
 - Auth is out of spec, so commented where it would be
-- Db layer/migrations are out of spec, so calls are made but no persistence
+- Db layer/migrations are out of spec, so calls are made  to the db layer but no persistence
 
 ## Frontend
 

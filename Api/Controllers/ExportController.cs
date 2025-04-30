@@ -23,6 +23,9 @@ public class ExportController(IExportJobService _exportJobService) : ControllerB
     [HttpPost("start")]
     public IActionResult Start([FromBody] StartJobRequest job)
     {
+        var domainId = 1;
+        _exportJobService.StartExportJob(job.DataSet, domainId);
+
         return Ok();
     }
 }

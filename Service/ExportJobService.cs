@@ -5,22 +5,23 @@ namespace Service;
 
 public interface IExportJobService
 {
-    void StartExportJob();
-    void StopExportJob();
+    void StartExportJob(string dataSet, int domainId);
     Job[] GetAllExportJobs(int domainId);
 }
 
 public class ExportJobService(IExportJobDb _exportJobDb, ExportJobPollingService _exportJobPollingService)
     : IExportJobService
 {
-    public void StartExportJob()
+    public void StartExportJob(string dataSet, int domainId)
     {
-        throw new NotImplementedException();
-    }
+        if (string.IsNullOrEmpty(dataSet))
+        {
+            throw new ArgumentException("Dataset cannot be null or empty.", nameof(dataSet));
+        }
 
-    public void StopExportJob()
-    {
-        throw new NotImplementedException();
+        var job = _exportJobDb.StartExportJob(dataSet);
+
+        _exportJobPollingService.AddJob(job.OperationId, domainId);
     }
 
     public Job[] GetAllExportJobs(int domainId)
@@ -31,7 +32,6 @@ public class ExportJobService(IExportJobDb _exportJobDb, ExportJobPollingService
         {
             if(job.Status == "Processing")
             {
-                Console.WriteLine($"Job {job.Id} is already processing.");
                 _exportJobPollingService.AddJob(job.OperationId, domainId);
             }
         }

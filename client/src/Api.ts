@@ -16,8 +16,8 @@ export const api = {
             const response = await axios.get(urls.exportJobs.Get);
             return response.data;
         },
-        start: async (jobId: string) => {
-            const response = await axios.post(urls.exportJobs.Start, {jobId});
+        start: async (dataSet: string) => {
+            const response = await axios.post(urls.exportJobs.Start, {dataSet});
             return response.data;
         },
     },

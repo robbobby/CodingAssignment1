@@ -37,7 +37,6 @@ export const ExportJobProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     };
 
     const startJob = async (dataSet: string) => {
-        setLoading(true);
         setError(null);
         try {
             await api.exportJobs.start(dataSet);

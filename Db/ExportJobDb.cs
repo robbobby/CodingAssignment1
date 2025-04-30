@@ -4,7 +4,7 @@ namespace Db;
 
 public interface IExportJobDb
 {
-    void StartExportJob();
+    ExportJobEntity StartExportJob(string dataSet);
     void StopExportJob();
     IQueryable<ExportJobEntity> GetAllExportJobs(int domainId);
     int UpdateOperationStatus(int operationId, string status);
@@ -19,9 +19,19 @@ public class ExportJobDb : IExportJobDb
         new() { Id = 3, Name = "Export Job 3", Status = "Processing", CreatedAt = DateTime.Now.AddHours(-5) , OperationId = 33 },
     ];
 
-    public void StartExportJob()
+    public ExportJobEntity StartExportJob(string dataSet)
     {
-        throw new NotImplementedException();
+        var job = new ExportJobEntity
+        {
+            Id = _jobs.Count + 1,
+            Name = dataSet + (_jobs.Count + 1),
+            Status = "Processing",
+            CreatedAt = DateTime.Now,
+            OperationId = _jobs.Count + 1
+        };
+
+        _jobs.Add(job);
+        return job;
     }
 
     public void StopExportJob()
@@ -37,12 +47,10 @@ public class ExportJobDb : IExportJobDb
     public int UpdateOperationStatus(int operationId, string status)
     {
         var job = _jobs.FirstOrDefault(j => j.OperationId == operationId);
-        Console.WriteLine($"Updating operation {operationId} status to {status}");
         
         if (job != null)
         {
-            // job.Status = status; This is commented out so we can refresh the application and rerun the job
-            Console.WriteLine($"Successfully updated operation {operationId} status to {status}");
+            job.Status = status;
             return job.Id;
         }
         

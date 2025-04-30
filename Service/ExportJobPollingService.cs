@@ -32,7 +32,6 @@ public class ExportJobPollingService(IServiceProvider _serviceProvider) : Backgr
 
     protected override async Task ExecuteAsync(CancellationToken token)
     {
-        Console.WriteLine("ExportJobPollingService started.");
         while (!token.IsCancellationRequested)
         {
             await _signal.WaitAsync(token);
@@ -54,8 +53,6 @@ public class ExportJobPollingService(IServiceProvider _serviceProvider) : Backgr
 
     private async Task ProcessJobAsync(int operationId, CancellationToken token)
     {
-        Console.WriteLine($"Checking status of job {operationId}...");
-
         try
         {
             var status = await CheckIfJobCompleteAsync(operationId, token);
@@ -72,10 +69,9 @@ public class ExportJobPollingService(IServiceProvider _serviceProvider) : Backgr
 
             RemoveJob(operationId);
 
-            Console.WriteLine($"Job {operationId} is complete and removed.");
         } catch(Exception ex)
         {
-            Console.WriteLine($"Error processing job {operationId}: {ex.Message}");
+            await Console.Error.WriteLineAsync($"Error processing job {operationId}: {ex.Message}");
         }
     }
 
@@ -87,7 +83,6 @@ public class ExportJobPollingService(IServiceProvider _serviceProvider) : Backgr
 
             if(!response.IsSuccessStatusCode)
             {
-                Console.WriteLine($"Failed to check status for job {jobId}. HTTP {response.StatusCode}");
                 return "Processing";
             }
 
@@ -96,7 +91,7 @@ public class ExportJobPollingService(IServiceProvider _serviceProvider) : Backgr
             return body;
         } catch(Exception ex)
         {
-            Console.WriteLine($"Error checking job {jobId}: {ex.Message}");
+            await Console.Error.WriteLineAsync($"Error checking job {jobId}: {ex.Message}");
             return "Processing";
         }
     }

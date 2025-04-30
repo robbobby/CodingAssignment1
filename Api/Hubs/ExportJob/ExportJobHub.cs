@@ -10,14 +10,12 @@ public class ExportJobHub : Hub
     {
         _connectionDomains[Context.ConnectionId] = 1;
 
-        Console.WriteLine($"Assigned domain {1} to connection {Context.ConnectionId}");
         await base.OnConnectedAsync();
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
         _connectionDomains.Remove(Context.ConnectionId);
-        Console.WriteLine($"Client disconnected: {Context.ConnectionId}");
         await base.OnDisconnectedAsync(exception);
     }
 
